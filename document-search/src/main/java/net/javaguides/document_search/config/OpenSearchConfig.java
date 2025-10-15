@@ -1,22 +1,34 @@
 package net.javaguides.document_search.config;
+import org.apache.http.HttpHost;
 
-import org.apache.hc.core5.http.HttpHost;
 import org.opensearch.client.RestClient;
 import org.opensearch.client.opensearch.OpenSearchClient;
 import org.opensearch.client.transport.rest_client.RestClientTransport;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.opensearch.client.json.jackson.JacksonJsonpMapper;
 
+@Configuration
 public class OpenSearchConfig {
-    public static void main(String[] args) throws Exception {
-        // Connect to local OpenSearch without SSL / auth
-        final HttpHost host = new HttpHost("https", "localhost", 9200);
-        final RestClient restClient = RestClient.builder(host).build();
-        final RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
 
-        final OpenSearchClient client = new OpenSearchClient(transport);
+    @Bean
+    public OpenSearchClient openSearchClient() {
+        final HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        final RestClient restClient = RestClient.builder(httpHost).build();
+        final RestClientTransport transport = new RestClientTransport(
+                restClient,
+                new JacksonJsonpMapper());
 
-        // Test connection
-        var info = client.info();
-        System.out.println("Connected to cluster: " + info.clusterName());
+        OpenSearchClient client = new OpenSearchClient(transport);
+        
+        try {
+            var info = client.info();
+            System.out.println("Successfully connected to OpenSearch cluster: {}"+ info.clusterName());
+            System.out.println("Version"+ info.version().number());
+        } catch (Exception e) {
+            System.out.println("Failed to connect to OpenSearch at"+ e);
+        }
+        
+        return client;
     }
 }

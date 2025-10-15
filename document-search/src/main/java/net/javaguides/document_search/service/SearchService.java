@@ -10,9 +10,11 @@ import org.opensearch.client.opensearch.core.IndexResponse;
 import org.opensearch.client.opensearch.core.SearchRequest;
 import org.opensearch.client.opensearch.core.SearchResponse;
 import org.opensearch.client.opensearch.core.search.Hit;
+import org.springframework.stereotype.Service;
 
 import net.javaguides.document_search.model.Document;
 
+@Service
 public class SearchService {
     private final OpenSearchClient searchClient;
     private final String INDEX = "documents";
