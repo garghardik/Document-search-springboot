@@ -24,9 +24,8 @@ public class OpenSearchConfig {
         try {
             var info = client.info();
             System.out.println("Successfully connected to OpenSearch cluster: {}"+ info.clusterName());
-            System.out.println("Version"+ info.version().number());
         } catch (Exception e) {
-            System.out.println("Failed to connect to OpenSearch at"+ e);
+            System.out.println("Failed to connect"+ e);
         }
         
         return client;
